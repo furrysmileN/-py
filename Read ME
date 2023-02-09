@@ -1,0 +1,2 @@
+##基于python语言，plotly库的可视化程序
+通过导入csv文件，按"date","time","ms","smartboxinfo","UIDS","temp","humi"的顺序自动整理，并提供了一些查询功能帮助检索对应UIDS和smartbox
