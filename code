@@ -1,0 +1,103 @@
+import pandas as pd
+import datetime
+import numpy as np
+import plotly.offline as py
+import plotly.express as px
+import plotly.graph_objects as go
+
+location=input("请将csv文件和py文件放在同一个文件夹内,并填入csv文件的名称(例:data.csv):")
+raw_data = pd.read_csv(location,names=["date","time","ms","smartboxinfo","UIDS","temp","humi"]) 
+#导入数据，根据数据类型制表
+
+raw_data['date_and_time']=raw_data['date']+'/'+raw_data['time']
+raw_data['date_and_time']=pd.to_datetime(raw_data['date_and_time'],format="[%Y-%m-%d/%H:%M:%S")
+raw_data['time']=pd.to_datetime(raw_data['time'],format="%H:%M:%S")        
+#将时间部分数据由字符串转换成时间类型
+
+print("UIDS and smartboxinfo general counts:")
+print(raw_data['smartboxinfo'].groupby(raw_data['UIDS']).value_counts())
+#执行基本统计
+
+UID1=input("请输入您想检索的UID数据:")
+UID1data=raw_data[raw_data['UIDS']==UID1]
+print(UID1data.head())
+
+fig1=go.Scatter(x=UID1data['date_and_time'],y=UID1data['smartboxinfo'],mode='markers',name="{UID1}test1")
+layout=go.Layout(title='genearal layout',xaxis={'title':'Time','tickangle':60},yaxis={'title': 'smartbox'})
+fig=go.Figure(fig1,layout)
+py.plot(fig)
+
+#UID=pd.DataFrame({"name":[UID1,"UID2","UID3"],"number":[810,790,612]})
+#fig1=px.pie(UID, names="name",values="number",title="Pie chart of User counts")
+#fig1.update_traces(textinfo='value')
+#py.plot(fig1)
+
+#检索并展示指定UID出现的时间和smartbox数量；或许可以加入逻辑语句能够自选功能，例如展示数量，展示所有条目等等
+raw_data.replace("['00000393']",'[]',inplace = True)
+raw_data.replace("['00000400'/'00000533'/'00000540']",'[]',inplace = True) 
+raw_data.replace("['00000400'/'00000533'/'00000559']",'[]',inplace = True)
+raw_data.replace("['00000400'/'00000533']",'[]',inplace = True)
+raw_data.replace("['00000400'/'00000559'/'00000533']",'[]',inplace = True)
+raw_data.replace("['00000400']",'[]',inplace = True)
+raw_data.replace("['00000409'/'00000538']",'[]',inplace = True)
+raw_data.replace("['00000409']",'[]',inplace = True)
+raw_data.replace("['00000410']",'[]',inplace = True)
+raw_data.replace("['00000440']",'[]',inplace = True)
+raw_data.replace("['00000535']",'[]',inplace = True)
+raw_data.replace("['00000411']",'[]',inplace = True)
+raw_data.replace("['00000524'/'00000503']",'[]',inplace = True)
+raw_data.replace("['00000533'/'00000400'/'00000538']",'[]',inplace = True)
+raw_data.replace("['00000533'/'00000400'/'00000559']",'[]',inplace = True)
+raw_data.replace("['00000533'/'00000400']",'[]',inplace = True)
+raw_data.replace("['00000533'/'00000559'/'00000400'/'00000539']",'[]',inplace = True)
+raw_data.replace("['00000533'/'00000559'/'00000400']",'[]',inplace = True)
+raw_data.replace("['00000533'/'00000559'/'00000539'/'00000400']",'[]',inplace = True)
+raw_data.replace("['00000533'/'00000559']",'[]',inplace = True)
+raw_data.replace("['00000533']",'[]',inplace = True)
+raw_data.replace("['00000538']",'[]',inplace = True)
+raw_data.replace("['00000539']",'[]',inplace = True)
+raw_data.replace("['00000540'/'8f22998c']",'[]',inplace = True)
+raw_data.replace("['00000540']",'[]',inplace = True)
+raw_data.replace("['00000542']",'[]',inplace = True)
+raw_data.replace("['00000550']",'[]',inplace = True)
+raw_data.replace("['00000556']",'[]',inplace = True)
+raw_data.replace("['00000559'/'00000400'/'00000533']",'[]',inplace = True)
+raw_data.replace("['00000559'/'00000533'/'00000400']",'[]',inplace = True)
+raw_data.replace("['00000559'/'00000533']",'[]',inplace = True)
+raw_data.replace("['00000563']",'[]',inplace = True)
+raw_data.replace("['00000581']",'[]',inplace = True)
+raw_data.replace("['00000582']",'[]',inplace = True)
+raw_data.replace("['0000111f']",'[]',inplace = True)
+raw_data.replace("['20690760']",'[]',inplace = True)
+raw_data.replace("['3c871da5']",'[]',inplace = True)
+raw_data.replace("['669d3a61']",'[]',inplace = True)
+raw_data.replace("['6f771db5']",'[]',inplace = True)
+raw_data.replace("['a13e028d'/'00000582']","['a13e028d']",inplace = True)
+raw_data.replace("['00000582'/'a13e028d']","['a13e028d']",inplace = True)
+raw_data.replace("['00000582'/'a13a1689']","['a13a1689']",inplace = True)
+raw_data.replace("['a13a1689'/'00000582']","['a13a1689']",inplace = True)
+raw_data=raw_data[raw_data.UIDS != "[]"] 
+#处理并删除无效数据
+#如何筛选出有效tag：是否可以先建立一个有效tag的库，然后删除？ 
+# 困难：字符串可能是多个有效tag连在一起/有效tag和无效tag同时出现：检索并精确选出想要的字符串/在长字符串中找到指定的字符串
+#问题2：想要整个数据分析可调节，可视化，能否高度自动化？统计数据并用数据制图
+
+sbinfo=input("请输入您想搜索的smartbox序号,格式为：'SmartBox-5';")
+sb1data=raw_data[raw_data['smartboxinfo']==sbinfo]
+print(sb1data.head())
+
+t1=sb1data[sb1data['time'].dt.hour.isin(np.arange(0, 2))].value_counts()
+t2=sb1data[sb1data['time'].dt.hour.isin(np.arange(2, 4))].value_counts()
+t3=sb1data[sb1data['time'].dt.hour.isin(np.arange(4, 6))].value_counts()
+t4=sb1data[sb1data['time'].dt.hour.isin(np.arange(6, 8))].value_counts()
+t5=sb1data[sb1data['time'].dt.hour.isin(np.arange(8, 10))].value_counts()
+t6=sb1data[sb1data['time'].dt.hour.isin(np.arange(10, 12))].value_counts()
+t7=sb1data[sb1data['time'].dt.hour.isin(np.arange(12, 14))].value_counts()
+t8=sb1data[sb1data['time'].dt.hour.isin(np.arange(14, 16))].value_counts()
+t9=sb1data[sb1data['time'].dt.hour.isin(np.arange(16, 18))].value_counts()
+t10=sb1data[sb1data['time'].dt.hour.isin(np.arange(18, 20))].value_counts()
+t11=sb1data[sb1data['time'].dt.hour.isin(np.arange(20, 22))].value_counts()
+t12=sb1data[sb1data['time'].dt.hour.isin(np.arange(22, 24))].value_counts()  
+
+#分析各个时间段的计数，可具体到某个设备，同理，可以具体到某个UIDS？
+#UID收集和数据分析可以通过input来确定具体需要查询哪些UIDS
