@@ -18,6 +18,18 @@ print("UIDS and smartboxinfo general counts:")
 print(raw_data['smartboxinfo'].groupby(raw_data['UIDS']).value_counts())
 #执行基本统计
 
+data1=raw_data.loc[raw_data['UIDS'].str.len()>12]
+data2=data1.loc[raw_data['UIDS'].str.len()<25]
+data_3=data1.loc[raw_data['UIDS'].str.len()>25]
+data3=data_3.loc[raw_data['UIDS'].str.len()<35]
+data4=data1.loc[raw_data['UIDS'].str.len()>35]
+#将含有不同UID数量的数据分离  2.21更新
+
+data2[['UIDS1','UIDS2']] = data2.UIDS.str.split("/", expand = True)
+
+#将有且仅有两个UID的数据集data2的UID分离成两个 2.21更新
+
+
 UID1=input("请输入您想检索的UID数据:")
 UID1data=raw_data[raw_data['UIDS']==UID1]
 print(UID1data.head())
